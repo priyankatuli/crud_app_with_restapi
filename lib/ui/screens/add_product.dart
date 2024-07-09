@@ -162,18 +162,19 @@ class _AddProductScreenState extends State<AddProductScreen>{
                   ],
                 )
             ),
-          ),
-        )
+          )
+        ),
     );
   }
 
   Future <void> _addProduct() async{
 
     _addNewProductInProgress =true;
+     if(mounted) {
+       setState(() {
 
-    setState(() {
-
-    });
+       });
+     }
 
     String addNewProductUrl = 'https://crud.teamrabbil.com/api/v1/CreateProduct';
 
@@ -188,11 +189,12 @@ class _AddProductScreenState extends State<AddProductScreen>{
       "UnitPrice": _unitPriceTEController.text
     };
 
-    //parsr to uri
+    //parse to uri
     Uri uri = Uri.parse(addNewProductUrl);
     //then request to post
-    Response response = await post(uri, body: jsonEncode(inputData), headers: {
-      'content-type': 'application/json'}
+    Response response = await post(uri,
+        body: jsonEncode(inputData),
+        headers: {'content-type': 'application/json'}
     );
     print(response.statusCode);
     print(response.headers);
@@ -202,6 +204,28 @@ class _AddProductScreenState extends State<AddProductScreen>{
     setState(() {});
 
     if(response.statusCode == 200){
+     _clearTextFields();
+     if(mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         const SnackBar(content: Text('New Product Added')),);
+     }
+
+    } else {
+      if(mounted){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Add New Product Failed')),);
+    }
+  }
+    _addNewProductInProgress = false;
+    if(mounted){
+      setState(() {
+
+      });
+    }
+
+  }
+
+  void _clearTextFields(){
       _nameTEController.clear();
       _unitPriceTEController.clear();
       _productCodeTEController.clear();
@@ -209,14 +233,6 @@ class _AddProductScreenState extends State<AddProductScreen>{
       _totalPriceTEController.clear();
       _imageTEController.clear();
       _quantityTEController.clear();
-      
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('New Product Added')),);
-
-    } else{
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Add New Product Failed')),);
-
-    }
-
   }
 
   @override
@@ -226,7 +242,6 @@ class _AddProductScreenState extends State<AddProductScreen>{
     _quantityTEController.dispose();
     _totalPriceTEController.dispose();
     super.dispose();
-
 
   }
 
