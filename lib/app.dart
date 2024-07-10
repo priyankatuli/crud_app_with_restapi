@@ -1,4 +1,4 @@
-import 'package:crud_app_with_restapi/product_list_screen.dart';
+import 'package:crud_app_with_restapi/ui/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 
 
